@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"go-grpc-tutorial/greet/greetpb"
 	"google.golang.org/grpc"
@@ -9,6 +10,14 @@ import (
 )
 
 type server struct{}
+
+func (*server) Greet(ctx context.Context,req *greetpb.GreetRequest) (*greetpb.GreetResponse, error) {
+	firstName := req.GetGreeting().GetFirstName()
+	lastName := req.GetGreeting().GetLastName()
+	greeting := fmt.Sprintf("Hello %s, %s", lastName, firstName)
+	res := greetpb.GreetResponse{Result: greeting}
+	return &res, nil
+}
 
 func main() {
 	lis, err := net.Listen("tcp", ":50051")
