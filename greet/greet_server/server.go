@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"time"
 )
 
 type server struct{}
@@ -17,6 +18,19 @@ func (*server) Greet(ctx context.Context,req *greetpb.GreetRequest) (*greetpb.Gr
 	greeting := fmt.Sprintf("Hello %s, %s", lastName, firstName)
 	res := greetpb.GreetResponse{Result: greeting}
 	return &res, nil
+}
+
+func (*server) GreetManyTimes(req *greetpb.GreetManyTimesRequest, streamRes greetpb.GreetService_GreetManyTimesServer) error  {
+	firstName := req.GetGreeting().GetFirstName()
+	lastName := req.GetGreeting().GetLastName()
+
+	for i := 0; i < 20 ; i++ {
+		greeting := fmt.Sprintf("Hello %s, %s %d times", lastName, firstName, i)
+		res := greetpb.GreetManyTimesResponse{Result: greeting}
+		streamRes.Send(&res)
+		time.Sleep(1 * time.Second)
+	}
+	return nil
 }
 
 func main() {
