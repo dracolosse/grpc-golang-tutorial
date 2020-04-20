@@ -17,7 +17,23 @@ message GreetResponse {
     string result = 1;
 }
 
+message Factors {
+    double first_factor = 1;
+    double second_factor = 2;
+}
+
+message FactorsRequest {
+    Factors factors = 1;
+}
+
+message FactorsResponse {
+    double product = 1;
+}
+
 service GreetService{
     // Unary
     rpc Greet(GreetRequest) returns (GreetResponse) {};
+
+    // Unary
+    rpc Multiply(FactorsRequest) returns (FactorsResponse) {};
 }

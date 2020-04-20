@@ -19,6 +19,14 @@ func (*server) Greet(ctx context.Context,req *greetpb.GreetRequest) (*greetpb.Gr
 	return &res, nil
 }
 
+func (*server) Multiply(ctx context.Context, req *greetpb.FactorsRequest) (*greetpb.FactorsResponse, error)  {
+	firstFactor := req.GetFactors().GetFirstFactor()
+	secondFactor := req.GetFactors().GetSecondFactor()
+
+	res := greetpb.FactorsResponse{Product: firstFactor*secondFactor}
+	return &res, nil
+}
+
 func main() {
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
