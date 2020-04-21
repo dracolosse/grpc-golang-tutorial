@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"io"
 	"log"
+	"time"
 )
 
 func main() {
@@ -20,7 +21,49 @@ func main() {
 	client := greetpb.NewGreetServiceClient(conn)
 
 	// greetByUnary(client)
-	GreetByServerStreaming(client)
+	// GreetByServerStreaming(client)
+	GreetByClientStreaming(client)
+}
+
+func GreetByClientStreaming(client greetpb.GreetServiceClient) {
+	names := [] struct {
+		LastName string
+		FirstName string
+	} {
+		{FirstName: "Bill",LastName: "Gates",},
+		{LastName: "Job", FirstName: "Steve",},
+		{LastName: "Page", FirstName: "Larry",},
+		{LastName: "Ritchie", FirstName: "Dennis",},
+		{LastName: "Zuckerberg", FirstName: "Mark",},
+		{LastName: "Ken", FirstName: "Thompson",},
+		{LastName: "Torvalds", FirstName: "Linus",},
+		{LastName: "Nakamoto", FirstName: "Satoshi",},
+		{LastName: "Lovelace", FirstName: "Ada",},
+		{LastName: "Berners-Lee", FirstName: "Tim",},
+		{LastName: "Turing", FirstName: "Alan",},
+	}
+	reqs := make([]greetpb.ManyGreetRequest, len(names))
+	for i, name := range names {
+		greet := greetpb.Greeting{FirstName: name.FirstName, LastName:name.LastName}
+		reqs[i] = greetpb.ManyGreetRequest{Greeting: &greet}
+	}
+
+	stream, err := client.ManyGreet(context.Background())
+	if err != nil {
+		log.Fatalf("Error when creating stream to server: %v", err)
+	}
+
+	for _, req := range reqs {
+		fmt.Printf("Streaming request: %v\n", &req)
+		stream.Send(&req)
+		time.Sleep(500*time.Millisecond)
+	}
+
+	res, err :=stream.CloseAndRecv()
+	if err != nil {
+		log.Fatalf("Error when closing and receiving from Server: %v", err)
+	}
+	fmt.Printf("ManyGreet response: %v", res.Result)
 }
 
 func greetByUnary(client greetpb.GreetServiceClient) {

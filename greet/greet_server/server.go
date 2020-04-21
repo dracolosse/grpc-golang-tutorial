@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go-grpc-tutorial/greet/greetpb"
 	"google.golang.org/grpc"
+	"io"
 	"log"
 	"net"
 	"time"
@@ -31,6 +32,25 @@ func (*server) GreetManyTimes(req *greetpb.GreetManyTimesRequest, streamRes gree
 		time.Sleep(1 * time.Second)
 	}
 	return nil
+}
+
+func (*server) ManyGreet(streamReq greetpb.GreetService_ManyGreetServer) error  {
+
+	greet := "Say hello to"
+	for {
+		req, err := streamReq.Recv()
+		if err == io.EOF {
+			// end of receiving requests
+			fmt.Printf("End of receiving requests and send response!")
+			res := greetpb.ManyGreetResponse{Result:greet}
+			return streamReq.SendAndClose(&res)
+		}
+		if err != nil {
+			log.Fatalf("Error when receiving client stream: %v", err)
+		}
+		greet += " " + req.GetGreeting().GetFirstName() +
+			" " + req.GetGreeting().GetLastName() + "\n"
+	}
 }
 
 func main() {
