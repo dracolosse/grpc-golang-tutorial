@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"net"
+	"os"
 	"time"
 )
 
@@ -50,6 +51,54 @@ func (*server) ManyGreet(streamReq greetpb.GreetService_ManyGreetServer) error  
 		}
 		greet += " " + req.GetGreeting().GetFirstName() +
 			" " + req.GetGreeting().GetLastName() + "\n"
+	}
+}
+
+func (*server) Upload(streamReq greetpb.GreetService_UploadServer) error {
+	// create a file to handle uploading file
+	file, err := os.Create("./outpput")
+	if err != nil {
+		log.Fatalf("Error when creating a new file")
+		streamReq.SendAndClose(
+			&greetpb.UploadStatus{
+				Result:"Failed: Cannot create file!",
+				Code: greetpb.UploadStatusCode(1),
+			})
+		return err
+	}
+	defer func() {
+		if err := file.Close(); err != nil {panic(err)}
+	}()
+
+
+	for {
+		res, err := streamReq.Recv()
+		if err == io.EOF {
+			streamReq.SendAndClose(
+				&greetpb.UploadStatus{
+					Result:"File uploaded successfully!",
+					Code: greetpb.UploadStatusCode(0),
+				})
+			return nil
+		}
+		if err != nil {
+			log.Fatalf("Error when receiving file %v", err)
+			streamReq.SendAndClose(
+				&greetpb.UploadStatus{
+					Result:"Failed: Error when receiving file!",
+					Code: greetpb.UploadStatusCode(1),
+				})
+		}
+		_, err = file.Write(res.Content)
+		if err != nil {
+			log.Fatalf("Error when writing file %v", err)
+			streamReq.SendAndClose(
+				&greetpb.UploadStatus{
+					Result:"Failed: Error when writing file!",
+					Code: greetpb.UploadStatusCode(1),
+				})
+			return err
+		}
 	}
 }
 

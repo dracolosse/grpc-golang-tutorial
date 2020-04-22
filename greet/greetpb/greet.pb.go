@@ -29,6 +29,52 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
+type UploadStatusCode int32
+
+const (
+	UploadStatusCode_Ok     UploadStatusCode = 0
+	UploadStatusCode_Failed UploadStatusCode = 1
+)
+
+// Enum value maps for UploadStatusCode.
+var (
+	UploadStatusCode_name = map[int32]string{
+		0: "Ok",
+		1: "Failed",
+	}
+	UploadStatusCode_value = map[string]int32{
+		"Ok":     0,
+		"Failed": 1,
+	}
+)
+
+func (x UploadStatusCode) Enum() *UploadStatusCode {
+	p := new(UploadStatusCode)
+	*p = x
+	return p
+}
+
+func (x UploadStatusCode) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (UploadStatusCode) Descriptor() protoreflect.EnumDescriptor {
+	return file_greet_greetpb_greet_proto_enumTypes[0].Descriptor()
+}
+
+func (UploadStatusCode) Type() protoreflect.EnumType {
+	return &file_greet_greetpb_greet_proto_enumTypes[0]
+}
+
+func (x UploadStatusCode) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use UploadStatusCode.Descriptor instead.
+func (UploadStatusCode) EnumDescriptor() ([]byte, []int) {
+	return file_greet_greetpb_greet_proto_rawDescGZIP(), []int{0}
+}
+
 type Greeting struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -366,6 +412,108 @@ func (x *ManyGreetResponse) GetResult() string {
 	return ""
 }
 
+type Chunk struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Content []byte `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
+}
+
+func (x *Chunk) Reset() {
+	*x = Chunk{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_greet_greetpb_greet_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Chunk) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Chunk) ProtoMessage() {}
+
+func (x *Chunk) ProtoReflect() protoreflect.Message {
+	mi := &file_greet_greetpb_greet_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Chunk.ProtoReflect.Descriptor instead.
+func (*Chunk) Descriptor() ([]byte, []int) {
+	return file_greet_greetpb_greet_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *Chunk) GetContent() []byte {
+	if x != nil {
+		return x.Content
+	}
+	return nil
+}
+
+type UploadStatus struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Result string           `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`
+	Code   UploadStatusCode `protobuf:"varint,2,opt,name=code,proto3,enum=greet.UploadStatusCode" json:"code,omitempty"`
+}
+
+func (x *UploadStatus) Reset() {
+	*x = UploadStatus{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_greet_greetpb_greet_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UploadStatus) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UploadStatus) ProtoMessage() {}
+
+func (x *UploadStatus) ProtoReflect() protoreflect.Message {
+	mi := &file_greet_greetpb_greet_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UploadStatus.ProtoReflect.Descriptor instead.
+func (*UploadStatus) Descriptor() ([]byte, []int) {
+	return file_greet_greetpb_greet_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *UploadStatus) GetResult() string {
+	if x != nil {
+		return x.Result
+	}
+	return ""
+}
+
+func (x *UploadStatus) GetCode() UploadStatusCode {
+	if x != nil {
+		return x.Code
+	}
+	return UploadStatusCode_Ok
+}
+
 var File_greet_greetpb_greet_proto protoreflect.FileDescriptor
 
 var file_greet_greetpb_greet_proto_rawDesc = []byte{
@@ -396,7 +544,17 @@ var file_greet_greetpb_greet_proto_rawDesc = []byte{
 	0x08, 0x67, 0x72, 0x65, 0x65, 0x74, 0x69, 0x6e, 0x67, 0x22, 0x2b, 0x0a, 0x11, 0x4d, 0x61, 0x6e,
 	0x79, 0x47, 0x72, 0x65, 0x65, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x16,
 	0x0a, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06,
-	0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x32, 0xdb, 0x01, 0x0a, 0x0c, 0x47, 0x72, 0x65, 0x65, 0x74,
+	0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x22, 0x21, 0x0a, 0x05, 0x43, 0x68, 0x75, 0x6e, 0x6b, 0x12,
+	0x18, 0x0a, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c,
+	0x52, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x22, 0x53, 0x0a, 0x0c, 0x55, 0x70, 0x6c,
+	0x6f, 0x61, 0x64, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x16, 0x0a, 0x06, 0x72, 0x65, 0x73,
+	0x75, 0x6c, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c,
+	0x74, 0x12, 0x2b, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0e, 0x32,
+	0x17, 0x2e, 0x67, 0x72, 0x65, 0x65, 0x74, 0x2e, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x53, 0x74,
+	0x61, 0x74, 0x75, 0x73, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x2a, 0x26,
+	0x0a, 0x10, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x43, 0x6f,
+	0x64, 0x65, 0x12, 0x06, 0x0a, 0x02, 0x4f, 0x6b, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06, 0x46, 0x61,
+	0x69, 0x6c, 0x65, 0x64, 0x10, 0x01, 0x32, 0x8c, 0x02, 0x0a, 0x0c, 0x47, 0x72, 0x65, 0x65, 0x74,
 	0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x34, 0x0a, 0x05, 0x47, 0x72, 0x65, 0x65, 0x74,
 	0x12, 0x13, 0x2e, 0x67, 0x72, 0x65, 0x65, 0x74, 0x2e, 0x47, 0x72, 0x65, 0x65, 0x74, 0x52, 0x65,
 	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x14, 0x2e, 0x67, 0x72, 0x65, 0x65, 0x74, 0x2e, 0x47, 0x72,
@@ -410,8 +568,11 @@ var file_greet_greetpb_greet_proto_rawDesc = []byte{
 	0x67, 0x72, 0x65, 0x65, 0x74, 0x2e, 0x4d, 0x61, 0x6e, 0x79, 0x47, 0x72, 0x65, 0x65, 0x74, 0x52,
 	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x18, 0x2e, 0x67, 0x72, 0x65, 0x65, 0x74, 0x2e, 0x4d,
 	0x61, 0x6e, 0x79, 0x47, 0x72, 0x65, 0x65, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x22, 0x00, 0x28, 0x01, 0x42, 0x0f, 0x5a, 0x0d, 0x67, 0x72, 0x65, 0x65, 0x74, 0x2f, 0x67, 0x72,
-	0x65, 0x65, 0x74, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x22, 0x00, 0x28, 0x01, 0x12, 0x2f, 0x0a, 0x06, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x12, 0x0c,
+	0x2e, 0x67, 0x72, 0x65, 0x65, 0x74, 0x2e, 0x43, 0x68, 0x75, 0x6e, 0x6b, 0x1a, 0x13, 0x2e, 0x67,
+	0x72, 0x65, 0x65, 0x74, 0x2e, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x53, 0x74, 0x61, 0x74, 0x75,
+	0x73, 0x22, 0x00, 0x28, 0x01, 0x42, 0x0f, 0x5a, 0x0d, 0x67, 0x72, 0x65, 0x65, 0x74, 0x2f, 0x67,
+	0x72, 0x65, 0x65, 0x74, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -426,31 +587,38 @@ func file_greet_greetpb_greet_proto_rawDescGZIP() []byte {
 	return file_greet_greetpb_greet_proto_rawDescData
 }
 
-var file_greet_greetpb_greet_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_greet_greetpb_greet_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_greet_greetpb_greet_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_greet_greetpb_greet_proto_goTypes = []interface{}{
-	(*Greeting)(nil),               // 0: greet.Greeting
-	(*GreetRequest)(nil),           // 1: greet.GreetRequest
-	(*GreetResponse)(nil),          // 2: greet.GreetResponse
-	(*GreetManyTimesRequest)(nil),  // 3: greet.GreetManyTimesRequest
-	(*GreetManyTimesResponse)(nil), // 4: greet.GreetManyTimesResponse
-	(*ManyGreetRequest)(nil),       // 5: greet.ManyGreetRequest
-	(*ManyGreetResponse)(nil),      // 6: greet.ManyGreetResponse
+	(UploadStatusCode)(0),          // 0: greet.UploadStatusCode
+	(*Greeting)(nil),               // 1: greet.Greeting
+	(*GreetRequest)(nil),           // 2: greet.GreetRequest
+	(*GreetResponse)(nil),          // 3: greet.GreetResponse
+	(*GreetManyTimesRequest)(nil),  // 4: greet.GreetManyTimesRequest
+	(*GreetManyTimesResponse)(nil), // 5: greet.GreetManyTimesResponse
+	(*ManyGreetRequest)(nil),       // 6: greet.ManyGreetRequest
+	(*ManyGreetResponse)(nil),      // 7: greet.ManyGreetResponse
+	(*Chunk)(nil),                  // 8: greet.Chunk
+	(*UploadStatus)(nil),           // 9: greet.UploadStatus
 }
 var file_greet_greetpb_greet_proto_depIdxs = []int32{
-	0, // 0: greet.GreetRequest.greeting:type_name -> greet.Greeting
-	0, // 1: greet.GreetManyTimesRequest.greeting:type_name -> greet.Greeting
-	0, // 2: greet.ManyGreetRequest.greeting:type_name -> greet.Greeting
-	1, // 3: greet.GreetService.Greet:input_type -> greet.GreetRequest
-	3, // 4: greet.GreetService.GreetManyTimes:input_type -> greet.GreetManyTimesRequest
-	5, // 5: greet.GreetService.ManyGreet:input_type -> greet.ManyGreetRequest
-	2, // 6: greet.GreetService.Greet:output_type -> greet.GreetResponse
-	4, // 7: greet.GreetService.GreetManyTimes:output_type -> greet.GreetManyTimesResponse
-	6, // 8: greet.GreetService.ManyGreet:output_type -> greet.ManyGreetResponse
-	6, // [6:9] is the sub-list for method output_type
-	3, // [3:6] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	1, // 0: greet.GreetRequest.greeting:type_name -> greet.Greeting
+	1, // 1: greet.GreetManyTimesRequest.greeting:type_name -> greet.Greeting
+	1, // 2: greet.ManyGreetRequest.greeting:type_name -> greet.Greeting
+	0, // 3: greet.UploadStatus.code:type_name -> greet.UploadStatusCode
+	2, // 4: greet.GreetService.Greet:input_type -> greet.GreetRequest
+	4, // 5: greet.GreetService.GreetManyTimes:input_type -> greet.GreetManyTimesRequest
+	6, // 6: greet.GreetService.ManyGreet:input_type -> greet.ManyGreetRequest
+	8, // 7: greet.GreetService.Upload:input_type -> greet.Chunk
+	3, // 8: greet.GreetService.Greet:output_type -> greet.GreetResponse
+	5, // 9: greet.GreetService.GreetManyTimes:output_type -> greet.GreetManyTimesResponse
+	7, // 10: greet.GreetService.ManyGreet:output_type -> greet.ManyGreetResponse
+	9, // 11: greet.GreetService.Upload:output_type -> greet.UploadStatus
+	8, // [8:12] is the sub-list for method output_type
+	4, // [4:8] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_greet_greetpb_greet_proto_init() }
@@ -543,19 +711,44 @@ func file_greet_greetpb_greet_proto_init() {
 				return nil
 			}
 		}
+		file_greet_greetpb_greet_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Chunk); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_greet_greetpb_greet_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UploadStatus); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_greet_greetpb_greet_proto_rawDesc,
-			NumEnums:      0,
-			NumMessages:   7,
+			NumEnums:      1,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_greet_greetpb_greet_proto_goTypes,
 		DependencyIndexes: file_greet_greetpb_greet_proto_depIdxs,
+		EnumInfos:         file_greet_greetpb_greet_proto_enumTypes,
 		MessageInfos:      file_greet_greetpb_greet_proto_msgTypes,
 	}.Build()
 	File_greet_greetpb_greet_proto = out.File
@@ -582,6 +775,8 @@ type GreetServiceClient interface {
 	GreetManyTimes(ctx context.Context, in *GreetManyTimesRequest, opts ...grpc.CallOption) (GreetService_GreetManyTimesClient, error)
 	// Client streaming
 	ManyGreet(ctx context.Context, opts ...grpc.CallOption) (GreetService_ManyGreetClient, error)
+	// uploading file by using client streaming
+	Upload(ctx context.Context, opts ...grpc.CallOption) (GreetService_UploadClient, error)
 }
 
 type greetServiceClient struct {
@@ -667,6 +862,40 @@ func (x *greetServiceManyGreetClient) CloseAndRecv() (*ManyGreetResponse, error)
 	return m, nil
 }
 
+func (c *greetServiceClient) Upload(ctx context.Context, opts ...grpc.CallOption) (GreetService_UploadClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_GreetService_serviceDesc.Streams[2], "/greet.GreetService/Upload", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &greetServiceUploadClient{stream}
+	return x, nil
+}
+
+type GreetService_UploadClient interface {
+	Send(*Chunk) error
+	CloseAndRecv() (*UploadStatus, error)
+	grpc.ClientStream
+}
+
+type greetServiceUploadClient struct {
+	grpc.ClientStream
+}
+
+func (x *greetServiceUploadClient) Send(m *Chunk) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *greetServiceUploadClient) CloseAndRecv() (*UploadStatus, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(UploadStatus)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // GreetServiceServer is the server API for GreetService service.
 type GreetServiceServer interface {
 	// Unary
@@ -675,6 +904,8 @@ type GreetServiceServer interface {
 	GreetManyTimes(*GreetManyTimesRequest, GreetService_GreetManyTimesServer) error
 	// Client streaming
 	ManyGreet(GreetService_ManyGreetServer) error
+	// uploading file by using client streaming
+	Upload(GreetService_UploadServer) error
 }
 
 // UnimplementedGreetServiceServer can be embedded to have forward compatible implementations.
@@ -689,6 +920,9 @@ func (*UnimplementedGreetServiceServer) GreetManyTimes(*GreetManyTimesRequest, G
 }
 func (*UnimplementedGreetServiceServer) ManyGreet(GreetService_ManyGreetServer) error {
 	return status.Errorf(codes.Unimplemented, "method ManyGreet not implemented")
+}
+func (*UnimplementedGreetServiceServer) Upload(GreetService_UploadServer) error {
+	return status.Errorf(codes.Unimplemented, "method Upload not implemented")
 }
 
 func RegisterGreetServiceServer(s *grpc.Server, srv GreetServiceServer) {
@@ -760,6 +994,32 @@ func (x *greetServiceManyGreetServer) Recv() (*ManyGreetRequest, error) {
 	return m, nil
 }
 
+func _GreetService_Upload_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(GreetServiceServer).Upload(&greetServiceUploadServer{stream})
+}
+
+type GreetService_UploadServer interface {
+	SendAndClose(*UploadStatus) error
+	Recv() (*Chunk, error)
+	grpc.ServerStream
+}
+
+type greetServiceUploadServer struct {
+	grpc.ServerStream
+}
+
+func (x *greetServiceUploadServer) SendAndClose(m *UploadStatus) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *greetServiceUploadServer) Recv() (*Chunk, error) {
+	m := new(Chunk)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 var _GreetService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "greet.GreetService",
 	HandlerType: (*GreetServiceServer)(nil),
@@ -778,6 +1038,11 @@ var _GreetService_serviceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "ManyGreet",
 			Handler:       _GreetService_ManyGreet_Handler,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "Upload",
+			Handler:       _GreetService_Upload_Handler,
 			ClientStreams: true,
 		},
 	},

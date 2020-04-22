@@ -7,6 +7,8 @@ import (
 	"google.golang.org/grpc"
 	"io"
 	"log"
+	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -22,7 +24,47 @@ func main() {
 
 	// greetByUnary(client)
 	// GreetByServerStreaming(client)
-	GreetByClientStreaming(client)
+	// GreetByClientStreaming(client)
+	UploadFileByClientStreaming(client)
+}
+
+func UploadFileByClientStreaming(client greetpb.GreetServiceClient) {
+	chunkSize := 64 * 1024 // 64kiB recommended chunk size
+	// get file to upload
+	absPath, _ := filepath.Abs("../go-grpc-tutorial/greet/greet_server")
+	file, err := os.Open(absPath + "/test.txt") // only test.txt accepted here.
+	if err != nil {
+		log.Fatalf("File not found or err: %v", err)
+		return
+	}
+	defer func() {
+		path, _ := os.Getwd()
+		fmt.Println("File saved at: ", path)
+		file.Close()
+	}()
+	streamReq, err := client.Upload(context.Background())
+	if err != nil {
+		log.Fatalf("Error when creating a stream to server: %v", err)
+		return
+	}
+	buff := make([]byte, chunkSize)
+	for  {
+		bytesRead, err := file.Read(buff)
+		if err == io.EOF {
+			streamReq.CloseAndRecv()
+			return
+		}
+		if err != nil {
+			log.Fatalf("Error when reading file: %v", err)
+			return
+		}
+		resPart := greetpb.Chunk{Content: buff[:bytesRead]}
+		err = streamReq.Send(&resPart)
+		if err != nil {
+			log.Fatalf("Error when sending chunk: %v", err)
+		}
+	}
+
 }
 
 func GreetByClientStreaming(client greetpb.GreetServiceClient) {
@@ -59,7 +101,7 @@ func GreetByClientStreaming(client greetpb.GreetServiceClient) {
 		time.Sleep(500*time.Millisecond)
 	}
 
-	res, err :=stream.CloseAndRecv()
+	res, err := stream.CloseAndRecv()
 	if err != nil {
 		log.Fatalf("Error when closing and receiving from Server: %v", err)
 	}

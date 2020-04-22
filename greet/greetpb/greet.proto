@@ -33,6 +33,20 @@ message ManyGreetResponse {
     string result = 1;
 }
 
+message Chunk {
+    bytes content = 1;
+}
+
+message UploadStatus {
+    string result = 1;
+    UploadStatusCode code = 2;
+}
+
+enum UploadStatusCode {
+    Ok = 0;
+    Failed = 1;
+}
+
 service GreetService{
     // Unary
     rpc Greet(GreetRequest) returns (GreetResponse) {};
@@ -42,4 +56,7 @@ service GreetService{
 
     // Client streaming
     rpc ManyGreet(stream ManyGreetRequest) returns (ManyGreetResponse) {};
+
+    // uploading file by using client streaming
+    rpc Upload(stream Chunk) returns (UploadStatus) {};
 }
