@@ -53,6 +53,30 @@ func (*server) ManyGreet(streamReq greetpb.GreetService_ManyGreetServer) error  
 	}
 }
 
+func (*server) GreetEverybody(streamReq greetpb.GreetService_GreetEverybodyServer) error  {
+	for {
+		req, err := streamReq.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			log.Fatalf("Error while reading client stream: %v", err)
+			return err
+		}
+		firstName := req.Greeting.GetFirstName()
+		lastName := req.Greeting.GetLastName()
+
+		result := fmt.Sprintf("Hello %v, %v from Server", firstName, lastName)
+		res := greetpb.GreetEverybodyResponse{Result: result}
+
+		err = streamReq.Send(&res)
+		if err != nil {
+			log.Fatalf("Error while streaming response %v, error: %v", res, err)
+			return err
+		}
+	}
+}
+
 func main() {
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
