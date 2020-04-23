@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package greet;
+option go_package="upload/proto";
+
+message Chunk {
+    bytes content = 1;
+}
+
+message UploadStatus {
+    string result = 1;
+    UploadStatusCode code = 2;
+}
+
+enum UploadStatusCode {
+    Ok = 0;
+    Failed = 1;
+}
+
+service UploadService{
+    // uploading file by using client streaming
+    rpc Upload(stream Chunk) returns (UploadStatus) {};
+}
