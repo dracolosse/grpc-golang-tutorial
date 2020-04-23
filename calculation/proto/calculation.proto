@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package calculation;
+option go_package="calculation/proto";
+
+message Factors {
+    double first_factor = 1;
+    double second_factor = 2;
+}
+
+message FactorsRequest {
+    Factors factors = 1;
+}
+
+message FactorsResponse {
+    double product = 1;
+}
+
+service CalculationService{
+    // Unary
+    rpc Multiply(FactorsRequest) returns (FactorsResponse) {};
+}
