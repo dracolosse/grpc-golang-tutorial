@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"go-grpc-tutorial/greet/greetpb"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"io"
 	"log"
 	"net"
@@ -75,6 +77,27 @@ func (*server) GreetEverybody(streamReq greetpb.GreetService_GreetEverybodyServe
 			return err
 		}
 	}
+}
+
+var balance = 1000.00
+func (*server) Withdraw(ctx context.Context, req *greetpb.WithdrawRequest) (*greetpb.WithdrawResponse, error)  {
+
+	withdraw := req.Amount
+	if withdraw <= 0 {
+		return nil, status.Errorf(
+			codes.InvalidArgument,
+			fmt.Sprintf("Withdraw amount %v must be positive", withdraw))
+	}
+
+	if withdraw > balance {
+		return nil, status.Errorf(
+			codes.InvalidArgument,
+			fmt.Sprintf("Withdraw amount %v must not be higher than available amount %v", withdraw, balance))
+	}
+
+	balance -= withdraw
+	res := greetpb.WithdrawResponse{Amount:balance}
+	return &res, nil
 }
 
 func main() {

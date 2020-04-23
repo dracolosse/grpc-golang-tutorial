@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"go-grpc-tutorial/greet/greetpb"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"io"
 	"log"
 	"time"
@@ -23,7 +25,38 @@ func main() {
 	// greetByUnary(client)
 	// GreetByServerStreaming(client)
 	// GreetByClientStreaming(client)
-	GreetEverybodyByBidiStreaming(client)
+	// GreetEverybodyByBidiStreaming(client)
+	WithdrawByUnary(client)
+}
+
+func WithdrawByUnary(client greetpb.GreetServiceClient) {
+	withdraw(client, 0)
+	for i := 1; i <= 3; i++ {
+		withdraw(client, float64(500))
+	}
+}
+
+func withdraw(client greetpb.GreetServiceClient, amount float64) {
+	fmt.Println("Try to withdraw an amount of: ", amount)
+	res, err := client.Withdraw(context.Background(), &greetpb.WithdrawRequest{Amount:amount})
+
+	if err != nil {
+		resErr, ok := status.FromError(err)
+		if ok {
+			// this is a user error (error defined by user at server side)
+			// use can use switch statement to handle all types of errors you wish
+			if resErr.Code() == codes.InvalidArgument {
+				fmt.Printf("%v is not a valid amount\n", amount)
+				fmt.Printf("Error: %v\n", resErr.Message())
+			}
+		} else {
+			// framework error due to something unexpected
+			log.Fatalf("Encounter a serious problem: %v\n", err)
+		}
+		return
+	}
+
+	fmt.Printf("Transaction sucessuful! Available amount is: %v\n", res.Amount)
 }
 
 func GreetEverybodyByBidiStreaming(client greetpb.GreetServiceClient) {

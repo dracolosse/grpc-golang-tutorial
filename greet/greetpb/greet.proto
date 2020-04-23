@@ -41,6 +41,14 @@ message GreetEverybodyResponse {
     string result = 1;
 }
 
+message WithdrawRequest {
+    double amount = 1;
+}
+
+message WithdrawResponse {
+    double amount = 1;
+}
+
 service GreetService{
     // Unary
     rpc Greet(GreetRequest) returns (GreetResponse) {};
@@ -53,4 +61,7 @@ service GreetService{
 
     //Bidirectional streaming
     rpc GreetEverybody(stream GreetEverybodyRequest) returns (stream GreetEverybodyResponse) {};
+
+    // Withdraw amount
+    rpc Withdraw(WithdrawRequest) returns (WithdrawResponse) {};
 }
