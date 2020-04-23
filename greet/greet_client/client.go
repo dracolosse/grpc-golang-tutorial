@@ -19,34 +19,8 @@ func main() {
 
 	client := greetpb.NewGreetServiceClient(conn)
 
-	// greetByUnary(client)
-	// GreetByServerStreaming(client)
-	DownloadFileStreaming(client)
-}
-
-func DownloadFileStreaming(client greetpb.GreetServiceClient) {
-	req := greetpb.FileRequest{FileName:"test.txt"}
-
-	resStream, err := client.DownloadFile(context.Background(), &req)
-	if err != nil {
-		log.Fatalf("Error when downloading file: %v", err)
-	}
-
-	var blob []byte
-	for {
-		message, err := resStream.Recv()
-		if err == io.EOF {
-			log.Println("received all chunks")
-			break
-		}
-		if err != nil {
-			log.Fatalf("Error when reading file: %v", err)
-			panic(err)
-		}
-		blob = append(blob, message.Chunk...)
-	}
-
-	fmt.Printf("End of downloading file")
+	greetByUnary(client)
+	GreetByServerStreaming(client)
 }
 
 func greetByUnary(client greetpb.GreetServiceClient) {

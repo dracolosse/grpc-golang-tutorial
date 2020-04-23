@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package greet;
+option go_package="download/proto";
+
+message Chunk {
+    bytes chunk = 1;
+}
+
+message FileRequest {
+    string file_name = 1;
+}
+
+service DownloadService{
+    // Server Streaming file
+    rpc DownloadFile(FileRequest) returns (stream Chunk) {};
+}
