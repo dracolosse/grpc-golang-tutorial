@@ -100,6 +100,26 @@ func (*server) Withdraw(ctx context.Context, req *greetpb.WithdrawRequest) (*gre
 	return &res, nil
 }
 
+func (*server) HelloWithDeadline(ctx context.Context, req *greetpb.HelloWithDeadlineRequest) (*greetpb.HelloWithDeadlineResponse, error)  {
+	// simulate that computation work takes 3s
+	for i := 0; i < 3; i++ {
+		// we verify that request's deadline not passed yet.
+		if ctx.Err() == context.Canceled {
+			// the client has canceled request
+			fmt.Println("The client canceled the request")
+			return nil, status.Error(codes.Canceled, "Client canceled the request")
+		}
+		// we simulate computation time
+		time.Sleep(time.Second)
+	}
+	firstName := req.Greeting.FirstName
+	lastName := req.Greeting.LastName
+	result := "Hello " + lastName + ", " + firstName
+	res := &greetpb.HelloWithDeadlineResponse{Result:result}
+
+	return res, nil
+}
+
 func main() {
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {

@@ -49,6 +49,14 @@ message WithdrawResponse {
     double amount = 1;
 }
 
+message HelloWithDeadlineRequest {
+    Greeting greeting = 1;
+}
+
+message HelloWithDeadlineResponse {
+    string result = 1;
+}
+
 service GreetService{
     // Unary
     rpc Greet(GreetRequest) returns (GreetResponse) {};
@@ -64,4 +72,7 @@ service GreetService{
 
     // Withdraw amount
     rpc Withdraw(WithdrawRequest) returns (WithdrawResponse) {};
+
+    // Unary call
+    rpc HelloWithDeadline(HelloWithDeadlineRequest) returns (HelloWithDeadlineResponse) {};
 }

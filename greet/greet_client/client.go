@@ -26,7 +26,39 @@ func main() {
 	// GreetByServerStreaming(client)
 	// GreetByClientStreaming(client)
 	// GreetEverybodyByBidiStreaming(client)
-	WithdrawByUnary(client)
+	// WithdrawByUnary(client)
+	HelloWithDeadlineByUnary(client)
+}
+
+func HelloWithDeadlineByUnary(client greetpb.GreetServiceClient) {
+	greeting := greetpb.Greeting{
+		FirstName: "Truc",
+		LastName:  "Nguyen",
+	}
+	req := greetpb.HelloWithDeadlineRequest{Greeting: &greeting}
+
+	CallHelloWithTime(client, req, 1*time.Second)
+	CallHelloWithTime(client, req, 5*time.Second)
+}
+
+func CallHelloWithTime(client greetpb.GreetServiceClient, req greetpb.HelloWithDeadlineRequest, timeout time.Duration) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel() //
+	res, err := client.HelloWithDeadline(ctx, &req)
+	if err != nil {
+		statusErr, ok := status.FromError(err)
+		if ok {
+			if statusErr.Code() == codes.DeadlineExceeded {
+				fmt.Println("Timeout!")
+			} else {
+				fmt.Println("Unexpected error: ", statusErr)
+			}
+		} else {
+			log.Fatalf("Error when calling Greet RPC: %v", err)
+		}
+		return
+	}
+	log.Printf("Response from Greet: %v", res.Result)
 }
 
 func WithdrawByUnary(client greetpb.GreetServiceClient) {
